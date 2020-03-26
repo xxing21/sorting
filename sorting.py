@@ -138,22 +138,30 @@ def quick_sorted(xs, cmp=cmp_standard):
         return concat
 
 
-def _partition(xs, lo, hi):
+def _partition(xs, lo, hi, cmp=cmp_standard):
     pivot = xs[hi]
     i = lo - 1
-    for j in range(lo,hi):
-        if xs[j] < pivot:
-            i += 1
-            xs[i], xs[j] = xs[j], xs[i]
-    xs[i+1], xs[hi] = xs[hi], xs[i+1]
+    if cmp==cmp_standard:
+        for j in range(lo,hi):
+            if xs[j] < pivot:
+                i += 1
+                xs[i], xs[j] = xs[j], xs[i]
+        xs[i+1], xs[hi] = xs[hi], xs[i+1]
+    elif cmp==cmp_reverse:
+        for j in range(lo,hi):
+            if xs[j] > pivot:
+                i += 1
+                xs[i], xs[j] = xs[j], xs[i]
+        xs[i+1], xs[hi] = xs[hi], xs[i+1]
     return i + 1
 
-def _quicksort(xs, lo, hi):
+def _quicksort(xs, lo, hi, cmp=cmp_standard):
     if lo < hi:
-        p = _partition(xs, lo, hi)
-        _quicksort(xs, lo, p - 1)
-        _quicksort(xs, p + 1, hi)
+        p = _partition(xs, lo, hi, cmp)
+        _quicksort(xs, lo, p - 1, cmp)
+        _quicksort(xs, p + 1, hi, cmp)
     return xs
+
 
 def quick_sort(xs, cmp=cmp_standard):
     '''
@@ -166,4 +174,4 @@ def quick_sort(xs, cmp=cmp_standard):
     to implement quick_sort as an in-place algorithm.
     You should directly modify the input xs variable instead of returning a copy of the list.
     '''
-    return _quicksort(xs, 0, len(xs) - 1)
+    return _quicksort(xs, 0, len(xs) - 1, cmp)
