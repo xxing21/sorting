@@ -137,3 +137,33 @@ def quick_sorted(xs, cmp=cmp_standard):
         concat = sort_less + equal + sort_more
         return concat
 
+
+def _partition(xs, lo, hi):
+    pivot = xs[hi]
+    i = lo - 1
+    for j in range(lo,hi):
+        if xs[j] < pivot:
+            i += 1
+            xs[i], xs[j] = xs[j], xs[i]
+    xs[i+1], xs[hi] = xs[hi], xs[i+1]
+    return i + 1
+
+def _quicksort(xs, lo, hi):
+    if lo < hi:
+        p = _partition(xs, lo, hi)
+        _quicksort(xs, lo, p - 1)
+        _quicksort(xs, p + 1, hi)
+    return xs
+
+def quick_sort(xs, cmp=cmp_standard):
+    '''
+    EXTRA CREDIT:
+    The main advantage of quick_sort is that it can be implemented in-place,
+    i.e. with O(1) memory requirement.
+    Merge sort, on the other hand, has an O(n) memory requirement.
+    Follow the pseudocode of the Lomuto partition scheme given on wikipedia
+    (https://en.wikipedia.org/wiki/Quicksort#Algorithm)
+    to implement quick_sort as an in-place algorithm.
+    You should directly modify the input xs variable instead of returning a copy of the list.
+    '''
+    return _quicksort(xs, 0, len(xs) - 1)
